@@ -1,86 +1,85 @@
 # Task Management API
 
-A fast, simple, and powerful REST API for managing tasks built with FastAPI and PostgreSQL.
-
-![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+> A simple REST API for managing tasks, built with FastAPI and PostgreSQL.
 
 ## Features
 
-- ✨ Create, read, update, and delete tasks
-- 📋 List all tasks with pagination
-- ✅ Mark tasks as completed
-- 📝 Simple status system (pending/completed)
-- 📚 Auto-generated API documentation
+* Create, read, update, and delete tasks
+* Filter tasks by status (pending/completed)
+* Paginated task listing
+* Automatic API documentation
 
-## Why FastAPI?
+## Tech Stack
 
-- 🚀 High performance
-- 📖 Automatic API documentation
-- 🛡️ Built-in data validation
-- 🔧 Easy to learn and use
+* FastAPI - Web framework
+* PostgreSQL - Database
+* SQLAlchemy - ORM
+* Pydantic - Data validation
 
-## Quick Start
+## Getting Started
 
-### Prerequisites
+### Database Setup
 
-- Python 3.8+
-- PostgreSQL
-
-### 1. Database Setup
-
-```sql
--- Log into PostgreSQL
+1. Log into PostgreSQL:
+```bash
 psql -U postgres
+```
 
--- Create database and user
+2. Run these commands:
+```sql
 CREATE DATABASE taskdb;
 CREATE USER taskuser WITH PASSWORD 'password123';
-
--- Grant privileges
 GRANT ALL PRIVILEGES ON DATABASE taskdb TO taskuser;
 \c taskdb
 GRANT ALL ON SCHEMA public TO taskuser;
-
 \q
 ```
 
-### 2. Environment Setup
+### Project Setup
 
+1. Clone the repository and navigate to the project directory:
 ```bash
-# Create and activate virtual environment
+git clone https://github.com/yourusername/task-api.git
+cd task-api
+```
+
+2. Create and activate virtual environment:
+```bash
+# Create virtual environment
 python -m venv .venv
 
-# Windows
+# Activate on Windows
 .venv\Scripts\activate
-# Mac/Linux
-source .venv/bin/activate
 
-# Install dependencies
+# Activate on macOS/Linux
+source .venv/bin/activate
+```
+
+3. Install dependencies:
+```bash
 pip install fastapi uvicorn sqlalchemy psycopg2-binary pydantic python-dotenv
 ```
 
-### 3. Configuration
-
-Create `.env` file in the project root:
-
-```env
+4. Create `.env` file:
+```plaintext
 DATABASE_URL=postgresql://taskuser:password123@localhost/taskdb
 ```
 
-### 4. Run the API
-
+5. Run the API:
 ```bash
-uvicorn main:app --reload --port 8000
+uvicorn main:app --reload --port 8001
 ```
 
-Visit `http://localhost:8000/docs` to see the interactive API documentation.
+The API will be available at `http://localhost:8001`
 
 ## API Usage
 
-### Create a Task
+### API Documentation
+Visit `http://localhost:8000/docs` for interactive API documentation.
 
+### Endpoints
+
+#### Create Task
 ```bash
 curl -X POST "http://localhost:8000/tasks/" \
      -H "Content-Type: application/json" \
@@ -90,10 +89,9 @@ curl -X POST "http://localhost:8000/tasks/" \
          }'
 ```
 
-### List Tasks
-
+#### List Tasks
 ```bash
-# Get all tasks (paginated)
+# Get all tasks
 curl "http://localhost:8000/tasks/"
 
 # Filter by status
@@ -103,8 +101,7 @@ curl "http://localhost:8000/tasks/?status=pending"
 curl "http://localhost:8000/tasks/?page=2&items_per_page=5"
 ```
 
-### Update a Task
-
+#### Update Task
 ```bash
 curl -X PUT "http://localhost:8000/tasks/1" \
      -H "Content-Type: application/json" \
@@ -113,49 +110,58 @@ curl -X PUT "http://localhost:8000/tasks/1" \
          }'
 ```
 
-### Delete a Task
-
+#### Delete Task
 ```bash
 curl -X DELETE "http://localhost:8000/tasks/1"
 ```
 
+## Design Decisions
+
+### Why FastAPI?
+* Automatic API documentation
+* Built-in data validation
+* Developer-friendly
+
+### Status System
+* Simple two-state system:
+  * `pending` - Task not completed
+  * `completed` - Task finished
+* Clear and straightforward
+
 ## Troubleshooting
 
-### Common Issues
+### Database Connection Issues
+1. Verify PostgreSQL is running
+2. Check database credentials
+3. Ensure database and user exist
+4. Verify permissions
 
-1. **Database Connection Failed**
-   - Verify PostgreSQL is running
-   - Check database credentials
-   - Ensure database and user exist
+### API Won't Start
+1. Check if port 8001 is available
+2. Ensure virtual environment is activated
+3. Verify all packages are installed
 
-2. **Port Conflict**
-   - Use an alternative port:
-     ```bash
-     uvicorn main:app --reload --port 8002
-     ```
+### Common Errors
+* "Port already in use": Try different port
+* "Package not found": Reinstall requirements
+* "Permission denied": Check database permissions
 
-3. **Missing Packages**
-   - Verify virtual environment is activated
-   - Reinstall dependencies:
-     ```bash
-     pip install -r requirements.txt
-     ```
+## Future Improvements
 
-## Roadmap
-
-### Feature Enhancements
+### Features
 - [ ] User authentication
 - [ ] Task priorities
 - [ ] Due dates
-- [ ] Categories/Tags
-- [ ] Task notes
-- [ ] Search functionality
+- [ ] Categories/tags
+- [ ] Task search
+- [ ] Batch operations
 
-### Technical Improvements
-- [ ] Data backup system
-- [ ] Email notifications
-- [ ] Task import/export
-- [ ] Performance optimization
-- [ ] Enhanced data validation
-- [ ] Audit logging
+### Technical
+- [ ] Caching layer
+- [ ] Rate limiting
+- [ ] Better error logging
+- [ ] Database migrations
 
+### Database
+- [ ] Performance indexes
+- [ ] Data archiving
