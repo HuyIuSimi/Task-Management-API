@@ -101,11 +101,32 @@ curl "http://localhost:8000/tasks/?status=pending"
 curl "http://localhost:8000/tasks/?page=2&items_per_page=5"
 ```
 
-#### Update Task
+### Update Task 
+1. **Update Task Status Only**
 ```bash
-curl -X PUT "http://localhost:8000/tasks/1" \
+curl -X PATCH "http://localhost:8000/tasks/1" \
      -H "Content-Type: application/json" \
      -d '{
+           "status": "completed"
+         }'
+```
+
+2. **Update Title Only**
+```bash
+curl -X PATCH "http://localhost:8000/tasks/1" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "title": "Updated Task Title"
+         }'
+```
+
+3. **Update Multiple Fields**
+```bash
+curl -X PATCH "http://localhost:8000/tasks/1" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "title": "New Title",
+           "description": "New description",
            "status": "completed"
          }'
 ```
