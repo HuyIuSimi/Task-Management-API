@@ -154,30 +154,42 @@ def get_task(task_id: int, db: Session = Depends(get_db)):
     return task
 
 # Update a task
-@app.patch("/tasks/{task_id}", response_model=Task)
-def update_task(task_id: int, task_update: TaskUpdate, db: Session = Depends(get_db)):
-    """
-    PATCH - Allows partial updates to the task
-    This is better for updating individual fields
-    """
+app.patch("/tasks/{task_id}/status", response_model=Task)
+def update_task_status(
+    task_id: int, 
+    status: TaskStatus,
+    db: Session = Depends(get_db)
+):
     db_task = db.query(TaskModel).filter(TaskModel.id == task_id).first()
     if db_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     
-    try:
-        # Only update provided fields
-        update_data = task_update.dict(exclude_unset=True)
-        for field, value in update_data.items():
-            if value is not None:  # Only update if value is provided
-                setattr(db_task, field, value)
-        
-        db_task.updated_at = datetime.utcnow()
-        db.commit()
-        db.refresh(db_task)
-        return db_task
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+    db_task.status = status
+    db_task.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(db_task)
+    return db_task
+
+@app.patch("/tasks/{task_id}/details", response_model=Task)
+def update_task_details(
+    task_id: int,
+    title: Optional[str] = None,
+    description: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    db_task = db.query(TaskModel).filter(TaskModel.id == task_id).first()
+    if db_task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    if title is not None:
+        db_task.title = title
+    if description is not None:
+        db_task.description = description
+    
+    db_task.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(db_task)
+    return db_task
 
 # Delete a task
 @app.delete("/tasks/{task_id}", status_code=204)
