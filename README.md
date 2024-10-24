@@ -28,10 +28,10 @@ psql -U postgres
 2. Run these commands:
 ```sql
 CREATE DATABASE taskdb;
-CREATE USER taskuser WITH PASSWORD 'password123';
-GRANT ALL PRIVILEGES ON DATABASE taskdb TO taskuser;
+CREATE USER postgres WITH PASSWORD '1';
+GRANT ALL PRIVILEGES ON DATABASE taskdb TO postgres;
 \c taskdb
-GRANT ALL ON SCHEMA public TO taskuser;
+GRANT ALL ON SCHEMA public TO postgres;
 \q
 ```
 
@@ -62,15 +62,15 @@ pip install fastapi uvicorn sqlalchemy psycopg2-binary pydantic python-dotenv
 
 4. Create `.env` file:
 ```plaintext
-DATABASE_URL=postgresql://taskuser:password123@localhost/taskdb
+DATABASE_URL=postgresql://postgres:1@localhost/taskdb
 ```
 
 5. Run the API:
 ```bash
-uvicorn main:app --reload --port 8001
+uvicorn main:app --reload --port 8000
 ```
 
-The API will be available at `http://localhost:8001`
+The API will be available at `http://localhost:8000`
 
 ## API Usage
 
@@ -152,16 +152,8 @@ curl -X DELETE "http://localhost:8000/tasks/1"
 - [ ] User authentication
 - [ ] Task priorities
 - [ ] Due dates
-- [ ] Categories/tags
-- [ ] Task search
-- [ ] Batch operations
-
+- [ ] Assign task for specific users
 ### Technical
-- [ ] Caching layer
-- [ ] Rate limiting
-- [ ] Better error logging
 - [ ] Database migrations
-
 ### Database
-- [ ] Performance indexes
-- [ ] Data archiving
+- [ ] create indexes
